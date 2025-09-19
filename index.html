@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Уха или рыбный суп?</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 600px;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+        
+        .progress-container {
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            height: 20px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+        
+        .image-container {
+            width: 100%;
+            height: 300px;
+            margin-bottom: 25px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .image-container img:hover {
+            transform: scale(1.05);
+        }
+        
+        .question {
+            font-size: 22px;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-weight: bold;
+        }
+        
+        .options {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+        }
+        
+        .option {
+            background: linear-gradient(to right, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 45%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .option:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .option:active {
+            transform: translateY(0);
+        }
+        
+        .option:disabled {
+            background: linear-gradient(to right, #95a5a6, #7f8c8d);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .option:disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .option-a {
+            background: linear-gradient(to right, #e74c3c, #c0392b);
+        }
+        
+        .option-b {
+            background: linear-gradient(to right, #2ecc71, #27ae60);
+        }
+        
+        .score {
+            font-size: 20px;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .result {
+            font-size: 24px;
+            font-weight: bold;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .restart {
+            background: linear-gradient(to right, #9b59b6, #8e44ad);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            display: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .restart:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .footer {
+            margin-top: 20px;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 600px) {
+            .options {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .option {
+                width: 90%;
+                margin-bottom: 15px;
+            }
+            
+            .image-container {
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Уха или рыбный суп?</h1>
+        
+        <div class="progress-container">
+            <div class="progress-bar" id="progress"></div>
+        </div>
+        
+        <div class="image-container">
+            <img id="soup-image" src="" alt="Супец">
+        </div>
+        
+        <div class="question">Это уха или рыбный суп?</div>
+        
+        <div class="options">
+            <button class="option option-a" id="option-uha">А) Уха</button>
+            <button class="option option-b" id="option-fishsoup">Б) Рыбный суп</button>
+        </div>
+        
+        <div class="score" id="score">Верно: 0/5</div>
+        
+        <div class="result" id="result"></div>
+        
+        <button class="restart" id="restart">Играть снова</button>
+        
+        <div class="footer">наебали! 🍲</div>
+    </div>
+
+    <script>
+        // Имитация изображений из двух папок
+        const images = [
+            { src: "https://i.ibb.co/TMtxx05N/55b3ba8c-49b4-4c66-8c5c-6761466f8321.webp", type: "uha" },
+            { src: "https://i.ibb.co/VpkbdbBs/654-0139t38-6162-1024.jpg", type: "fishsoup" },
+            { src: "https://i.ibb.co/0yvBPMnw/fc519cab5532e5307853a08b4fd90117.png", type: "uha" },
+            { src: "https://i.ibb.co/RpNvD31c/uha-iz-trjoh-vidov-ryby-s-rastegaem-2.jpg", type: "fishsoup" },
+            { src: "https://i.ibb.co/TMtxx05N/55b3ba8c-49b4-4c66-8c5c-6761466f8321.webp", type: "uha" },
+            { src: "https://i.ibb.co/WN833WG3/7d10e9d741.jpg", type: "fishsoup" },
+            { src: "https://i.ibb.co/PZYttPQv/91779bd0-d50b-4432-9f8c-1561e6d7ccfe.webp", type: "uha" },
+            { src: "https://i.ibb.co/rKj3c727/uha-v-kazane1.jpg", type: "fishsoup" },
+            { src: "https://i.ibb.co/ccMWZddS/big-428045.jpg", type: "uha" },
+            { src: "https://i.ibb.co/VpkbdbBs/654-0139t38-6162-1024.jpg", type: "fishsoup" }
+        ];
+
+        let currentQuestion = 0;
+        let correctAnswers = 0;
+        let usedIndices = [];
+
+        const progressBar = document.getElementById('progress');
+        const soupImage = document.getElementById('soup-image');
+        const scoreElement = document.getElementById('score');
+        const resultElement = document.getElementById('result');
+        const restartButton = document.getElementById('restart');
+        const optionUha = document.getElementById('option-uha');
+        const optionFishsoup = document.getElementById('option-fishsoup');
+
+        // Начать игру
+        function startGame() {
+            currentQuestion = 0;
+            correctAnswers = 0;
+            usedIndices = [];
+            updateScore();
+            resultElement.style.display = 'none';
+            restartButton.style.display = 'none';
+            
+            // Разблокируем кнопки
+            optionUha.disabled = false;
+            optionFishsoup.disabled = false;
+            
+            loadQuestion();
+        }
+
+        // Загрузка вопроса
+        function loadQuestion() {
+            if (currentQuestion >= 5) {
+                showResult();
+                return;
+            }
+
+            // Обновляем прогресс
+            progressBar.style.width = `${(currentQuestion / 5) * 100}%`;
+
+            // Выбираем случайное изображение, которое еще не использовалось
+            let randomIndex;
+            do {
+                randomIndex = Math.floor(Math.random() * images.length);
+            } while (usedIndices.includes(randomIndex));
+            
+            usedIndices.push(randomIndex);
+            
+            const image = images[randomIndex];
+            soupImage.src = image.src;
+            soupImage.dataset.type = image.type;
+
+            currentQuestion++;
+        }
+
+        // Проверка ответа
+        function checkAnswer(userAnswer) {
+            const correctAnswer = soupImage.dataset.type;
+            const isCorrect = (userAnswer === correctAnswer);
+            
+            if (isCorrect) {
+                correctAnswers++;
+                updateScore();
+            }
+            
+            loadQuestion();
+        }
+
+        // Обновление счета
+        function updateScore() {
+            scoreElement.textContent = `Верно: ${correctAnswers}/5`;
+        }
+
+        // Показать результат
+        function showResult() {
+            progressBar.style.width = '100%';
+            
+            let message = '';
+            if (correctAnswers <= 1) {
+                message = 'Рыбак хуев';
+                resultElement.style.background = 'linear-gradient(to right, #e74c3c, #c0392b)';
+                resultElement.style.color = 'white';
+            } else if (correctAnswers <= 3) {
+                message = 'Хуевая у тебя уха.';
+                resultElement.style.background = 'linear-gradient(to right, #f39c12, #e67e22)';
+                resultElement.style.color = 'white';
+            } else {
+                message = 'Вы выиграли лодку';
+                resultElement.style.background = 'linear-gradient(to right, #2ecc71, #27ae60)';
+                resultElement.style.color = 'white';
+            }
+            
+            resultElement.textContent = message;
+            resultElement.style.display = 'block';
+            restartButton.style.display = 'inline-block';
+            
+            // Блокируем кнопки после завершения игры
+            optionUha.disabled = true;
+            optionFishsoup.disabled = true;
+        }
+
+        // Обработчики событий
+        optionUha.addEventListener('click', () => checkAnswer('uha'));
+        optionFishsoup.addEventListener('click', () => checkAnswer('fishsoup'));
+        restartButton.addEventListener('click', startGame);
+
+        // Начать игру при загрузке
+        window.addEventListener('load', startGame);
+    </script>
+</body>
+</html>
